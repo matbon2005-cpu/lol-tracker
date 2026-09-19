@@ -336,152 +336,156 @@ class PlayerRow(ft.Row):
         self.cancel_spell("spell2")
 
 def main(page: ft.Page):
-    page.title = "LoL Spell Tracker"
-    page.theme_mode = ft.ThemeMode.DARK
-    page.padding = 5
-    page.spacing = 5 
-#    page.window_width = 880 
-#   page.window_height = 360
-    
-    player_rows = []
-    app_locked = False
-    trash_active = False
-    trash_timer = None
-    
-    undo_stack = []
-    redo_stack = []
-
-    def update_undo_redo_buttons():
-        undo_btn.opacity = 1.0 if undo_stack else 0.3
-        redo_btn.opacity = 1.0 if redo_stack else 0.3
-        page.update()
-
-    def record_action(row, spell_slot):
-        undo_stack.append((row, spell_slot))
-        redo_stack.clear()
-        update_undo_redo_buttons()
-
-    async def handle_undo(e):
-        if not undo_stack: return
-        row, spell_slot = undo_stack.pop()
-        rem_time = row.get_remaining_time(spell_slot)
-        row.cancel_spell(spell_slot)
-        redo_stack.append((row, spell_slot, rem_time))
-        update_undo_redo_buttons()
-
-    async def handle_redo(e):
-        if not redo_stack: return
-        row, spell_slot, rem_time = redo_stack.pop()
-        undo_stack.append((row, spell_slot))
-        update_undo_redo_buttons()
-        await row.resume_spell(spell_slot, rem_time)
-
-    def get_trash_status():
-        return trash_active
-
-    def deactivate_trash():
-        nonlocal trash_active, trash_timer
-        trash_active = False
-        trash_btn.icon_color = ft.colors.WHITE
-        main_container.border = ft.border.all(2, ft.colors.TRANSPARENT)
-        if trash_timer:
-            trash_timer.cancel()
-            trash_timer = None
-        page.update()
-
-    main_container = ft.Container(
-        border=ft.border.all(2, ft.colors.TRANSPARENT),
-        border_radius=8,
-        padding=5
-    )
-
-    def toggle_lock(e):
-        nonlocal app_locked
-        app_locked = not app_locked
-        lock_btn.icon = ft.icons.LOCK if app_locked else ft.icons.LOCK_OPEN
-        lock_btn.icon_color = ft.colors.RED if app_locked else ft.colors.GREEN
-        for row in player_rows:
-            row.set_lock(app_locked)
-        page.update()
-
-    def toggle_trash(e):
-        nonlocal trash_active, trash_timer
-        trash_active = not trash_active
-        trash_btn.icon_color = ft.colors.RED if trash_active else ft.colors.WHITE
-        main_container.border = ft.border.all(3, ft.colors.RED if trash_active else ft.colors.TRANSPARENT)
+    try:
+        page.title = "LoL Spell Tracker"
+        page.theme_mode = ft.ThemeMode.DARK
+        page.padding = 5
+        page.spacing = 5 
         
-        if trash_timer:
-            trash_timer.cancel()
-            trash_timer = None
+        player_rows = []
+        app_locked = False
+        trash_active = False
+        trash_timer = None
+        
+        undo_stack = []
+        redo_stack = []
+
+        def update_undo_redo_buttons():
+            undo_btn.opacity = 1.0 if undo_stack else 0.3
+            redo_btn.opacity = 1.0 if redo_stack else 0.3
+            page.update()
+
+        def record_action(row, spell_slot):
+            undo_stack.append((row, spell_slot))
+            redo_stack.clear()
+            update_undo_redo_buttons()
+
+        async def handle_undo(e):
+            if not undo_stack: return
+            row, spell_slot = undo_stack.pop()
+            rem_time = row.get_remaining_time(spell_slot)
+            row.cancel_spell(spell_slot)
+            redo_stack.append((row, spell_slot, rem_time))
+            update_undo_redo_buttons()
+
+        async def handle_redo(e):
+            if not redo_stack: return
+            row, spell_slot, rem_time = redo_stack.pop()
+            undo_stack.append((row, spell_slot))
+            update_undo_redo_buttons()
+            await row.resume_spell(spell_slot, rem_time)
+
+        def get_trash_status():
+            return trash_active
+
+        def deactivate_trash():
+            nonlocal trash_active, trash_timer
+            trash_active = False
+            trash_btn.icon_color = ft.colors.WHITE
+            main_container.border = ft.border.all(2, ft.colors.TRANSPARENT)
+            if trash_timer:
+                trash_timer.cancel()
+                trash_timer = None
+            page.update()
+
+        main_container = ft.Container(
+            border=ft.border.all(2, ft.colors.TRANSPARENT),
+            border_radius=8,
+            padding=5
+        )
+
+        def toggle_lock(e):
+            nonlocal app_locked
+            app_locked = not app_locked
+            lock_btn.icon = ft.icons.LOCK if app_locked else ft.icons.LOCK_OPEN
+            lock_btn.icon_color = ft.colors.RED if app_locked else ft.colors.GREEN
+            for row in player_rows:
+                row.set_lock(app_locked)
+            page.update()
+
+        def toggle_trash(e):
+            nonlocal trash_active, trash_timer
+            trash_active = not trash_active
+            trash_btn.icon_color = ft.colors.RED if trash_active else ft.colors.WHITE
+            main_container.border = ft.border.all(3, ft.colors.RED if trash_active else ft.colors.TRANSPARENT)
             
-        if trash_active:
-            trash_timer = threading.Timer(10.0, deactivate_trash)
-            trash_timer.start()
-            
+            if trash_timer:
+                trash_timer.cancel()
+                trash_timer = None
+                
+            if trash_active:
+                trash_timer = threading.Timer(10.0, deactivate_trash)
+                trash_timer.start()
+                
+            page.update()
+
+        lock_btn = ft.IconButton(
+            icon=ft.icons.LOCK_OPEN,
+            icon_color=ft.colors.GREEN,
+            icon_size=22,
+            on_click=toggle_lock,
+            tooltip="Blocca/Sblocca configurazione"
+        )
+
+        trash_btn = ft.IconButton(
+            icon=ft.icons.DELETE,
+            icon_color=ft.colors.WHITE,
+            icon_size=22,
+            on_click=toggle_trash,
+            tooltip="Attiva/Disattiva modalità Reset (Annulla errore click)"
+        )
+
+        undo_btn = ft.IconButton(
+            icon=ft.icons.UNDO,
+            icon_color=ft.colors.WHITE,
+            icon_size=22,
+            on_click=handle_undo,
+            tooltip="Annulla ultima azione (Undo)"
+        )
+        undo_btn.opacity = 0.3
+
+        redo_btn = ft.IconButton(
+            icon=ft.icons.REDO,
+            icon_color=ft.colors.WHITE,
+            icon_size=22,
+            on_click=handle_redo,
+            tooltip="Ripristina azione annullata (Redo)"
+        )
+        redo_btn.opacity = 0.3
+
+        header = ft.Row(
+            [
+                ft.Row([undo_btn, redo_btn], spacing=2),
+                trash_btn,
+                lock_btn
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+        )
+
+        content_column = ft.Column([
+            header,
+            ft.Divider(height=1, color=ft.colors.WHITE24)
+        ], spacing=5)
+
+        roles_setup = [
+            {"role": "TOP", "default_spell": "Teleport", "exclude": ["Smite", "Heal"]},
+            {"role": "JGL", "default_spell": "Smite", "exclude": []},
+            {"role": "MID", "default_spell": "Teleport", "exclude": ["Smite", "Heal"]},
+            {"role": "ADC", "default_spell": "Barrier", "exclude": ["Smite"]},
+            {"role": "SUP", "default_spell": "Exhaust", "exclude": ["Smite"]}
+        ]
+        
+        for setup in roles_setup:
+            row = PlayerRow(setup["role"], setup["default_spell"], setup["exclude"], get_trash_status, deactivate_trash, record_action)
+            player_rows.append(row)
+            content_column.controls.append(row)
+
+        main_container.content = content_column
+        page.add(main_container)
+
+    except Exception as ex:
+        # Se c'è un errore, l'app scrive esattamente cosa è successo sullo schermo del telefono
+        page.add(ft.Text(f"ERRORE: {ex}", color=ft.colors.RED, size=16))
         page.update()
-
-    lock_btn = ft.IconButton(
-        icon=ft.icons.LOCK_OPEN,
-        icon_color=ft.colors.GREEN,
-        icon_size=22,
-        on_click=toggle_lock,
-        tooltip="Blocca/Sblocca configurazione"
-    )
-
-    trash_btn = ft.IconButton(
-        icon=ft.icons.DELETE,
-        icon_color=ft.colors.WHITE,
-        icon_size=22,
-        on_click=toggle_trash,
-        tooltip="Attiva/Disattiva modalità Reset (Annulla errore click)"
-    )
-
-    undo_btn = ft.IconButton(
-        icon=ft.icons.UNDO,
-        icon_color=ft.colors.WHITE,
-        icon_size=22,
-        on_click=handle_undo,
-        tooltip="Annulla ultima azione (Undo)"
-    )
-    undo_btn.opacity = 0.3
-
-    redo_btn = ft.IconButton(
-        icon=ft.icons.REDO,
-        icon_color=ft.colors.WHITE,
-        icon_size=22,
-        on_click=handle_redo,
-        tooltip="Ripristina azione annullata (Redo)"
-    )
-    redo_btn.opacity = 0.3
-
-    header = ft.Row(
-        [
-            ft.Row([undo_btn, redo_btn], spacing=2),
-            trash_btn,
-            lock_btn
-        ],
-        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-    )
-
-    content_column = ft.Column([
-        header,
-        ft.Divider(height=1, color=ft.colors.WHITE24)
-    ], spacing=5)
-
-    roles_setup = [
-        {"role": "TOP", "default_spell": "Teleport", "exclude": ["Smite", "Heal"]},
-        {"role": "JGL", "default_spell": "Smite", "exclude": []},
-        {"role": "MID", "default_spell": "Teleport", "exclude": ["Smite", "Heal"]},
-        {"role": "ADC", "default_spell": "Barrier", "exclude": ["Smite"]},
-        {"role": "SUP", "default_spell": "Exhaust", "exclude": ["Smite"]}
-    ]
-    
-    for setup in roles_setup:
-        row = PlayerRow(setup["role"], setup["default_spell"], setup["exclude"], get_trash_status, deactivate_trash, record_action)
-        player_rows.append(row)
-        content_column.controls.append(row)
-
-    main_container.content = content_column
-    page.add(main_container)
 
 ft.app(target=main)
