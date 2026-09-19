@@ -3,19 +3,19 @@ import asyncio
 import threading
 
 SPELLS = {
-    "Flash": {"cd": 300, "img": "https://ddragon.leagueoflegends.com/cdn/14.18.1/img/spell/SummonerFlash.png"},
-    "Ghost": {"cd": 240, "img": "https://ddragon.leagueoflegends.com/cdn/14.18.1/img/spell/SummonerHaste.png"},
-    "Teleport": {"cd": 360, "img": "https://ddragon.leagueoflegends.com/cdn/14.18.1/img/spell/SummonerTeleport.png"},
-    "Smite": {"cd": 90, "img": "https://ddragon.leagueoflegends.com/cdn/14.18.1/img/spell/SummonerSmite.png"},
-    "Barrier": {"cd": 180, "img": "https://ddragon.leagueoflegends.com/cdn/14.18.1/img/spell/SummonerBarrier.png"},
-    "Exhaust": {"cd": 210, "img": "https://ddragon.leagueoflegends.com/cdn/14.18.1/img/spell/SummonerExhaust.png"},
-    "Ignite": {"cd": 210, "img": "https://ddragon.leagueoflegends.com/cdn/14.18.1/img/spell/SummonerDot.png"},
-    "Heal": {"cd": 240, "img": "https://ddragon.leagueoflegends.com/cdn/14.18.1/img/spell/SummonerHeal.png"},
-    "Cleanse": {"cd": 210, "img": "https://ddragon.leagueoflegends.com/cdn/14.18.1/img/spell/SummonerBoost.png"}
+    "Flash": {"cd": 300, "img": "assets/Flash_HD.webp"},
+    "Ghost": {"cd": 240, "img": "assets/Ghost_HD.webp"},
+    "Teleport": {"cd": 360, "img": "assets/Teleport_HD.webp"},
+    "Smite": {"cd": 90, "img": "assets/Smite_HD.webp"},
+    "Barrier": {"cd": 180, "img": "assets/Barrier_HD.webp"},
+    "Exhaust": {"cd": 210, "img": "assets/Exhaust_HD.webp"},
+    "Ignite": {"cd": 210, "img": "assets/Ignite_HD.webp"},
+    "Heal": {"cd": 240, "img": "assets/Heal_HD.webp"},
+    "Cleanse": {"cd": 210, "img": "assets/Cleanse_HD.webp"}
 }
 
-IONIAN_IMG = "https://ddragon.leagueoflegends.com/cdn/14.18.1/img/item/3158.png"
-COSMIC_IMG = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/styles/inspiration/cosmicinsight/cosmicinsight.png"
+IONIAN_IMG = "assets/CosmicInsight_HD.webp"
+COSMIC_IMG = "assets/Ionia_HD.webp"
 UNLEASHED_TP_CD = 420  # 7 minuti fissi
 
 class PlayerRow(ft.Row):
