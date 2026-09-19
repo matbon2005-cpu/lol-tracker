@@ -3,19 +3,19 @@ import asyncio
 import threading
 
 SPELLS = {
-    "Flash": {"cd": 300, "img": "assets/Flash_HD.webp"},
-    "Ghost": {"cd": 240, "img": "assets/Ghost_HD.webp"},
-    "Teleport": {"cd": 360, "img": "assets/Teleport_HD.webp"},
-    "Smite": {"cd": 90, "img": "assets/Smite_HD.webp"},
-    "Barrier": {"cd": 180, "img": "assets/Barrier_HD.webp"},
-    "Exhaust": {"cd": 210, "img": "assets/Exhaust_HD.webp"},
-    "Ignite": {"cd": 210, "img": "assets/Ignite_HD.webp"},
-    "Heal": {"cd": 240, "img": "assets/Heal_HD.webp"},
-    "Cleanse": {"cd": 210, "img": "assets/Cleanse_HD.webp"}
+    "Flash": {"cd": 300, "img": "Flash_HD.webp"},
+    "Ghost": {"cd": 240, "img": "Ghost_HD.webp"},
+    "Teleport": {"cd": 360, "img": "Teleport_HD.webp"},
+    "Smite": {"cd": 90, "img": "Smite_HD.webp"},
+    "Barrier": {"cd": 180, "img": "Barrier_HD.webp"},
+    "Exhaust": {"cd": 210, "img": "Exhaust_HD.webp"},
+    "Ignite": {"cd": 210, "img": "Ignite_HD.webp"},
+    "Heal": {"cd": 240, "img": "Heal_HD.webp"},
+    "Cleanse": {"cd": 210, "img": "Cleanse_HD.webp"}
 }
 
-IONIAN_IMG = "assets/Ionian_HD.webp"
-COSMIC_IMG = "assets/CosmicInsight_HD.webp"
+IONIAN_IMG = "Ionian_HD.webp"
+COSMIC_IMG = "CosmicInsight_HD.webp"
 UNLEASHED_TP_CD = 420  # 7 minuti fissi
 
 class PlayerRow(ft.Row):
