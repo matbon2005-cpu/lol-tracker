@@ -340,8 +340,8 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.DARK
     page.padding = 5
     page.spacing = 5 
-    page.window_width = 880 
-    page.window_height = 360
+#    page.window_width = 880 
+#   page.window_height = 360
     
     player_rows = []
     app_locked = False
