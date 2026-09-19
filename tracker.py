@@ -56,7 +56,6 @@ class PlayerRow(ft.Row):
             on_click=self.toggle_cosmic
         )
         
-        # --- BLOCCO TELETRASPORTATO POTENZIATO (Esclusivo per TOP) ---
         if role_name == "TOP":
             self.unleashed_tp_text = ft.Text("", size=11, weight=ft.FontWeight.BOLD, color=ft.colors.WHITE)
             self.unleashed_tp_img = ft.Image(src=SPELLS["Teleport"]["img"], width=35, height=35)
@@ -76,9 +75,7 @@ class PlayerRow(ft.Row):
             group_unleashed_tp = self.unleashed_tp_container
         else:
             group_unleashed_tp = ft.Container(width=35, height=35)
-        # -------------------------------------------------------------
         
-        # Flash (Slot 1)
         self.current_spell1 = "Flash"
         self.spell1_img = ft.Image(src=SPELLS["Flash"]["img"], width=35, height=35)
         self.spell1_container = ft.Container(content=self.spell1_img, opacity=1.0)
@@ -101,7 +98,6 @@ class PlayerRow(ft.Row):
             )
         )
         
-        # Spell 2 (Slot 2)
         self.current_spell2 = default_spell2
         self.spell2_img = ft.Image(src=SPELLS[default_spell2]["img"], width=35, height=35)
         self.spell2_container = ft.Container(content=self.spell2_img, opacity=1.0)
@@ -341,6 +337,7 @@ def main(page: ft.Page):
         page.theme_mode = ft.ThemeMode.DARK
         page.padding = 5
         page.spacing = 5 
+        # NOTA: Rimossi window_width e window_height per evitare crash su Android
         
         player_rows = []
         app_locked = False
@@ -482,10 +479,10 @@ def main(page: ft.Page):
 
         main_container.content = content_column
         page.add(main_container)
-
+        
     except Exception as ex:
-        # Se c'è un errore, l'app scrive esattamente cosa è successo sullo schermo del telefono
-        page.add(ft.Text(f"ERRORE: {ex}", color=ft.colors.RED, size=16))
+        # Se qualcosa non va, mostra l'errore sullo schermo invece di crashare in silenzio
+        page.add(ft.Text(f"ERRORE CRITICO: {ex}", color=ft.colors.RED, size=18))
         page.update()
 
 ft.app(target=main)
