@@ -14,8 +14,8 @@ SPELLS = {
     "Cleanse": {"cd": 210, "img": "assets/Cleanse_HD.webp"}
 }
 
-IONIAN_IMG = "assets/CosmicInsight_HD.webp"
-COSMIC_IMG = "assets/Ionia_HD.webp"
+IONIAN_IMG = "assets/Ionian_HD.webp"
+COSMIC_IMG = "assets/CosmicInsight_HD.webp"
 UNLEASHED_TP_CD = 420  # 7 minuti fissi
 
 class PlayerRow(ft.Row):
